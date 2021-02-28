@@ -1,0 +1,111 @@
+---
+title: "Titanic Survival Analysis"
+author: "Hinan Bilal"
+output: html_document
+---
+
+The Titanic sank on April 15th 1912 during her maiden voyage. This report analyzes the Titanic data for 1309 passengers and crews to determine how passengers' survival depended on other measured variables in the dataset.
+
+Loading the required libraries
+```{r}
+library(PASWR2)
+library(ggplot2)
+library(dplyr)
+library(GGally)
+library(rpart)
+library(rpart.plot)
+```
+The following code plots the survivors and fatalities in each class. The plot clearly shows the class warfare because most of the passengers who survived belong to first class, whereas, most of the passengers who were left to die belonged to 3rd class cabin.
+```{r}
+ggplot(TITANIC3, aes(x=survived, fill=pclass)) +
+  geom_bar(width=0.7) +
+  scale_fill_manual(values=c("red", "yellow", "light green"))+
+  theme(panel.grid.minor=element_blank(),panel.grid.major=element_blank())+
+  scale_x_continuous(breaks = c(0,1), labels = c("No", "Yes"))
+```
+
+
+In the question (b) we further dive and analyse the survivors according to their class and gender. We found class warfare had prominent impact on the survivability of men. Whereas, class warfare had a very small impact on the survivability of women. This also proves male chivelry.   
+```{r}
+#b
+
+ggplot(TITANIC3, aes(x=age, fill=survived==1)) + theme_bw()+
+  facet_wrap(sex~pclass)+geom_histogram(bnwidth=10)+scale_fill_manual(values=c("hotpink", "deepskyblue"))+labs(y="survived", x="age")
+```
+
+
+
+In the question c. We analyze the passengers ages and their count. The graph displays there were many young passengers on titanic. Moreover, survival rate amongts young population is high and it drops as the age of passengers increase. In a nutshell, older the passenger lesser will be the chance of survival.
+```{r}
+
+survivedd<-as.factor(TITANIC3$survived)
+agee<-as.factor(TITANIC3$age)
+
+ggplot(TITANIC3, aes(x=age, fill=survivedd))+
+  theme_bw()+
+  geom_histogram(binwidth=5)+
+  labs(y="Number of passengers", x="Age")
+
+
+
+```
+
+In the question d. We analysed that the women who survived had mean and median age greater then the women who died. This means a greater propotion of older women survived. 
+```{r}
+#d
+#mean of who survived
+data<-TITANIC3[TITANIC3$sex=='female',]
+da <- data[data$survived==1,]
+
+ompleterecords <- na.omit(da$age)
+print(mean(ompleterecords))
+print(median(ompleterecords))
+#mean of who  didnt survived
+data<-TITANIC3[TITANIC3$sex=='female',]
+da <- data[data$survived==0,]
+
+ompleterecords <- na.omit(da$age)
+print(mean(ompleterecords))
+
+print(median(ompleterecords))
+```
+
+In the question e. We analysed that the men who survived had lesser mean and median age then the men who died. This means a greater propotion of young males survived the incident. 
+```{r}
+#e
+#mean of who survived
+data<-TITANIC3[TITANIC3$sex=='male',]
+da <- data[data$survived==1,]
+
+ompleterecords <- na.omit(da$age)
+print(mean(ompleterecords))
+print(median(ompleterecords))
+#mean of who  didnt survived
+data<-TITANIC3[TITANIC3$sex=='male',]
+da <- data[data$survived==0,]
+
+ompleterecords <- na.omit(da$age)
+print(mean(ompleterecords))
+
+print(median(ompleterecords))
+```
+
+In the question f. We searched for the youngest female in the first class cabin. Her age was 14. 
+```{r}
+#f
+data2 <- TITANIC3[TITANIC3$pclass=='1st',]
+
+daa <- data2[data2$survived==1,]
+
+dat<-daa[daa$sex=='female',]
+ompleterecords <- na.omit(dat$age)
+print(paste("Age of youngest female survivor in first class",min(ompleterecords)))
+```
+In the question g. We have to conclude our observations from the data analysis. The plot of question a clearly shows the class warfare because too many 3rd class cabin people died. Furthermore, a greater propotion of 1st class passengers also survived. This shows elite passengers were given preference during the rescue mission. On the other side, we have also observed the male chivalry in the incident. In the 3rd class cabin where passenger fatality rate was high. Women survival rate was very much higher then the male survival rate. Same goes for all other cabins. This also means class warfare could not beat male chivalry because from graphs it seems like women were given priority for rescue in all three cabins. 
+
+
+
+
+
+
+
